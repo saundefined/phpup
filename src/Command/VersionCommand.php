@@ -5,6 +5,7 @@ namespace PhpUp\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
 class VersionCommand extends Command
 {
@@ -16,7 +17,11 @@ class VersionCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('phpup <info>' . PHPUP_VERSION . '</info>, with PHP <info>' . phpversion() . '</info>');
+        $process = new Process(['build/php', '--version']);
+        $process->run();
+
+        $output->writeln('phpup <info>' . PHPUP_VERSION . '</info>');
+        $output->writeln($process->getOutput());
 
         return Command::SUCCESS;
     }
