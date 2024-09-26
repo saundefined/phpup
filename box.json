@@ -1,11 +1,10 @@
 {
-  "files": [
-    
-  ],
   "files-bin": [
-    "vendor/bin/var-dump-server"
+    "vendor/bin/var-dump-server",
+    "build/php"
   ],
   "directories": [
+    "src",
     "vendor"
   ]
 }

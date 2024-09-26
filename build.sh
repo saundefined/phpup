@@ -4,9 +4,7 @@ set -e
 rm -rf ./build/phpup
 rm -rf ./build/index.*
 
-box compile
 mkdir -p ./build
-mv index.phar ./build/
 
 # Detect OS and architecture
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -30,11 +28,21 @@ fi
 
 # Construct the download URL
 PHP_VERSION="8.3.6"
-DOWNLOAD_URL="https://dl.static-php.dev/static-php-cli/common/php-${PHP_VERSION}-micro-${OS}-${ARCH}.tar.gz"
+DOWNLOAD_MICRO_URL="https://dl.static-php.dev/static-php-cli/common/php-${PHP_VERSION}-micro-${OS}-${ARCH}.tar.gz"
+DOWNLOAD_CLI_URL="https://dl.static-php.dev/static-php-cli/common/php-${PHP_VERSION}-cli-${OS}-${ARCH}.tar.gz"
+
+cd build || exit
+echo "Downloading from: $DOWNLOAD_CLI_URL"
+curl -L -O "$DOWNLOAD_CLI_URL"
+tar -xvf "php-${PHP_VERSION}-cli-${OS}-${ARCH}.tar.gz"
+
+cd ../ || exit
+box compile
+mv index.phar ./build/
 
 # Download and extract
 cd build || exit
-echo "Downloading from: $DOWNLOAD_URL"
-curl -L -O "$DOWNLOAD_URL"
+echo "Downloading from: $DOWNLOAD_MICRO_URL"
+curl -L -O "$DOWNLOAD_MICRO_URL"
 tar -xvf "php-${PHP_VERSION}-micro-${OS}-${ARCH}.tar.gz"
 cat ./micro.sfx ./index.phar >./phpup && chmod 0755 ./phpup

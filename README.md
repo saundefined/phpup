@@ -23,9 +23,9 @@ sudo mv phpup /usr/local/bin/phpup
 ## Usage
 
 - `phpup list` – See the list of available commands.
-- `phpup <file>` – Run any php file. 🚧
+- `phpup file <file>` – Run any php file. 🚧
 - `phpup composer` – Composer that does not require PHP to be installed.
-- `phpup conductor <command>` – Like npx but for PHP. 🚧
+- `phpup run vendor/package <command>` – Like npx but for PHP. 🚧
 - `phpup locus` – Installs PHP binary under your project's `vendor/bin/php` based on the requirements in _composer.json_.
 
 - ~~`phpup phpstan` – PHPStan that does not require PHP. 🚧~~

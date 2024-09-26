@@ -1,42 +1,28 @@
+#!/usr/bin/env php
 <?php
 
-const PHPUP_VERSION = '0.2.0';
+use Symfony\Component\Console\Application;
 
-if (!isset($argv[1])) {
-    echo "Not enough arguments \n";
-    exit(1);
-}
+(static function (): void {
+    if (file_exists($autoload = 'vendor/autoload.php')) {
+        include_once $autoload;
+
+        return;
+    }
+
+    throw new RuntimeException('Unable to find the Composer autoloader.');
+})();
+
+const PHPUP_VERSION = '0.2.0';
 
 // @TODO Handle restart
 putenv("COMPOSER_ALLOW_XDEBUG=1");
 putenv("PHPSTAN_ALLOW_XDEBUG=1");
 putenv("RECTOR_ALLOW_XDEBUG=1");
 
-$command = escapeshellcmd($argv[1]);
-$vendorBinPath = __DIR__ . '/vendor/bin/';
+$application = new Application();
+$application->add(new \PhpUp\Command\FileCommand());
+$application->add(new \PhpUp\Command\RunCommand());
+$application->add(new \PhpUp\Command\VersionCommand());
 
-if ('list' === $command) {
-    $files = scandir($vendorBinPath);
-    foreach ($files as $file) {
-        if ($file === '.' || $file === '..') { continue; }
-        echo $file . "\n";
-    }
-    exit;
-}
-
-if ('--version' === $command) {
-    echo 'phpup v', PHPUP_VERSION, ', with PHP v', PHP_VERSION, "\n";
-    exit;
-}
-
-array_shift($_SERVER['argv']);
-
-$pathToBinary = $vendorBinPath . $command;
-if (file_exists($pathToBinary)) {
-    require_once $pathToBinary;
-    exit;
-} else if (file_exists($command)) {
-    require_once $command;
-    exit;
-}
-exit(1);
+$application->run();
