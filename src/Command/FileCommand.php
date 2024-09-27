@@ -25,7 +25,7 @@ class FileCommand extends Command
             return Command::SUCCESS;
         }
 
-        $process = new Process(['build/php', '--version']);
+        $process = new Process(['build/php', $input->getArgument('path')]);
         $process->setTty(true)->run();
 
         return Command::SUCCESS;
